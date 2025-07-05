@@ -76,6 +76,7 @@
               <tr>
                 <th>Archivo</th>
                 <th>Fragmento</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -83,6 +84,14 @@
               <tr>
                 <td><span class="pdf-icon">📄</span>{{ r.nombre }}</td>
                 <td class="fragmento">{{ r.fragmento|safe }}</td>
+                <td>
+                  <a
+                    href="{% url 'vista_pdf' r.nombre %}"
+                    class="btn btn-sm btn-primary"
+                  >
+                    Ver PDF completo
+                  </a>
+                </td>
               </tr>
               {% endfor %}
             </tbody>
