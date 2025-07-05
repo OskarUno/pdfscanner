@@ -1,0 +1,46 @@
+# ▶️ Entorno virtual
+venv/
+ENV/
+
+# 🐍 Archivos de Python compilados
+__pycache__/
+*.py[cod]
+
+# 📄 Base de datos local
+db.sqlite3
+*.sqlite3
+
+# 🔊 Logs y temporales
+*.log
+*.bak
+*.tmp
+*.swp
+
+# 🧾 Traducciones (si no las usás aún)
+*.po
+*.mo
+
+
+# 📁 PDFs importados (carga local, no producción)
+media/
+
+# 📦 Archivos estáticos recolectados con collectstatic
+staticfiles/
+
+# 🧠 Archivos personales / auxiliares
+Inicio2.bat
+pasos.txt
+
+# 🧑‍🔧 Archivos de configuración del editor
+.vscode/
+.idea/
+*.code-workspace
+
+# 🍎 Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# 📦 Paquetes (si llegás a tener setup.py o builds)
+dist/
+build/
+*.egg-info/
