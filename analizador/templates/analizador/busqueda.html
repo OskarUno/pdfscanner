@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Buscar en PDFs</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .fragmento {
+        font-style: italic;
+      }
+      mark {
+        background-color: #ffc107;
+        padding: 0 2px;
+      }
+      .pdf-icon {
+        color: #dc3545;
+        margin-right: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h1 class="text-center mb-4">🔍 Buscar en PDFs (sin guardar)</h1>
+          {% if messages %} {% for msg in messages %}
+          <div class="alert alert-danger">{{ msg }}</div>
+          {% endfor %} {% endif %}
+
+          <form
+            method="post"
+            enctype="multipart/form-data"
+            class="card p-4 shadow-sm mb-4"
+          >
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="id_palabra" class="form-label">Texto a buscar</label>
+              {{ form.palabra }}
+            </div>
+            <div class="mb-3">
+              <label for="id_archivos" class="form-label"
+                >Subir archivos PDF</label
+              >
+              <div class="mb-3">
+                <label for="id_archivos" class="form-label"
+                  >Subir archivos PDF</label
+                >
+                <input
+                  type="file"
+                  name="archivos"
+                  id="id_archivos"
+                  class="form-control"
+                  multiple
+                  accept=".pdf"
+                />
+              </div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">Buscar</button>
+              <a href="/importar/" class="btn btn-outline-success"
+                >📦 Ir a Importar</a
+              >
+            </div>
+          </form>
+
+          {% if resultados %}
+          <h4 class="mb-3">📁 Resultados encontrados</h4>
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Archivo</th>
+                <th>Fragmento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in resultados %}
+              <tr>
+                <td><span class="pdf-icon">📄</span>{{ r.nombre }}</td>
+                <td class="fragmento">{{ r.fragmento|safe }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="alert alert-info text-center">
+            No se han encontrado resultados aún.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
