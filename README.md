@@ -1,14 +1,18 @@
 # 📄 PDFScanner
 
-Aplicación web desarrollada con Django para importar, renombrar y buscar texto dentro de archivos PDF.
+Aplicación web desarrollada con Django para importar, renombrar, buscar y gestionar texto dentro de archivos PDF.
 
 ## ✨ Funcionalidades
 
-- Subida múltiple de archivos PDF.
-- Búsqueda de texto dentro de los PDFs sin guardarlos.
-- Renombrado automático de PDFs con formato `{RUT}_F{Factura}.pdf`.
-- Interfaz optimizada con Bootstrap 5.
-- Panel dividido en dos vistas: `Importar` y `Buscar`.
+- Subida múltiple de archivos PDF
+- Renombrado automático de PDFs con formato `{RUT}_F{Factura}.pdf`
+- Búsqueda de texto dentro de los PDFs **sin guardarlos** (modo temporal)
+- Panel dividido en dos vistas: `Importar` y `Buscar`
+- Visualización embebida de PDFs con botones reutilizables (`Volver`, `Inicio`, `Nueva pestaña`)
+- Panel adicional para listar archivos **persistentes** en la carpeta `media/`
+- Navegación consistente con footer fijo en todas las vistas
+- Interfaz optimizada con Bootstrap 5 y componentes fragmentados (`include`)
+
 
 ## 🚀 Cómo ejecutar el proyecto
 
@@ -30,18 +34,21 @@ python manage.py runserver
 5. - Accede en tu navegador: http://127.0.0.1:8000
 
 📁 Estructura clave
-| Carpeta / Archivo | Descripción | 
-| manage.py | Archivo principal para comandos Django | 
-| pdfscanner/ | Configuración del proyecto (settings, urls) | 
-| analizador/ | App que contiene vistas, templates y lógica | 
-| media/ | Carpeta con PDFs importados (ignorada por Git) | 
-| templates/ | HTML estilizado con Bootstrap 5 | 
+| Carpeta / Archivo  | Descripción | 
+| manage.py          | Archivo principal para comandos Django | 
+| pdfscanner/        | Configuración del proyecto (settings, urls) | 
+| analizador/        | App que contiene vistas, templates y lógica | 
+| media/             | Carpeta con PDFs importados (ignorada por Git) | 
+| media/tmp/         | Carpeta temporal usada para búsqueda sin persistencia | 
+| templates/         | HTML estilizado con Bootstrap 5 | 
+| components/         | Fragmentos reutilizables (footer, botones_pdf, etc.) | 
+| vista_pdfs.css        | Estilos personalizados para visualización | 
 
 
-## 📁 Privacidad y exclusiones
-
-Este proyecto genera archivos PDF que se almacenan localmente en la carpeta `media/`.  
-Por razones de privacidad y buen control de versiones, esta carpeta está excluida del repositorio mediante `.gitignore`.
+🔐 Privacidad y exclusiones
+- Archivos PDF procesados se almacenan localmente en la carpeta media/
+- La carpeta media/ está excluida del control de versiones vía .gitignore
+- Se aplican buenas prácticas para no guardar PDFs temporales innecesarios (tmp/ se limpia en cada búsqueda)
 
 
 
