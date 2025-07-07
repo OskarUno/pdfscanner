@@ -4,18 +4,34 @@ from django.contrib import messages         # 1) Importamos sistema de mensajes
 from .forms import PDFSearchForm            # 2) Formulario solo para el texto
 from django.conf import settings            # Para vista en pdf embebida
 
-# 📁 Carpeta donde se guardan los archivos PDF importados
-MEDIA_DIR = settings.MEDIA_ROOT
-
-
 
 def index(request):
     return render(request, "analizador/index.html")
 
 
+# 📁 Carpeta donde se guardan los archivos PDF importados
+import os, re, fitz
+from django.shortcuts import render
+from django.contrib import messages
+from .forms import PDFSearchForm
+from django.conf import settings
+
+MEDIA_DIR = settings.MEDIA_ROOT
+TEMP_DIR = os.path.join(MEDIA_DIR, "tmp")
+
 def buscar_en_pdfs(request):
     form = PDFSearchForm(request.POST or None)
     resultados = []
+
+    # 🧹 Limpiar PDF temporales antes de procesar nuevos archivos
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    for archivo in os.listdir(TEMP_DIR):
+        ruta_archivo = os.path.join(TEMP_DIR, archivo)
+        try:
+            if os.path.isfile(ruta_archivo):
+                os.remove(ruta_archivo)
+        except Exception as e:
+            print(f"⚠️ No se pudo eliminar {ruta_archivo}: {e}")
 
     if request.method == "POST":
         palabra = request.POST.get("palabra", "").strip()
@@ -31,19 +47,18 @@ def buscar_en_pdfs(request):
 
             for archivo in archivos:
                 nombre = archivo.name
-                ruta_temp = os.path.join(MEDIA_DIR, nombre)
+                ruta_temp = os.path.join(TEMP_DIR, nombre)
                 fragmento = "–"
                 encontrado = False
 
-                # 🧾 Guardar archivo en disco para vista previa posterior
+                # Guardar archivo temporal
                 try:
                     with open(ruta_temp, "wb") as f:
                         for chunk in archivo.chunks():
                             f.write(chunk)
 
-                    # 🔍 Abrir PDF y buscar palabra
+                    # Buscar palabra en el PDF
                     doc = fitz.open(ruta_temp)
-
                     for pagina in doc:
                         texto = pagina.get_text()
                         if lower_palabra in texto.lower():
@@ -60,21 +75,18 @@ def buscar_en_pdfs(request):
                 except Exception as e:
                     fragmento = f"⚠️ Error al leer PDF: {e}"
 
-                # 📋 Guardamos resultado para mostrar en tabla y vista previa
+                # Agregar resultado con vista previa desde /media/tmp
                 resultados.append({
                     "nombre": nombre,
                     "fragmento": fragmento,
                     "coincide": encontrado,
-                    "ruta": f"/media/{nombre}"
+                    "ruta": f"/media/tmp/{nombre}"
                 })
 
     return render(request, "analizador/busqueda.html", {
         "form": form,
         "resultados": resultados
     })
-
-  
-
 
 
 
@@ -134,6 +146,8 @@ def importar_pdfs(request):
                     estado = f"⚠️ Error: {e}"
                     ruta_final = ruta_temp
 
+
+
                 # 🗂️ Agregamos resultado para mostrar en tabla HTML
                 resultados.append({
                     "nombre": os.path.basename(ruta_final),
@@ -147,13 +161,40 @@ def importar_pdfs(request):
         "resultados": resultados
     })
     
+def ver_archivos_media(request):
+    media_dir = settings.MEDIA_ROOT
+    archivos = []
+
+    for nombre in os.listdir(media_dir):
+        ruta_completa = os.path.join(media_dir, nombre)
+        if os.path.isfile(ruta_completa) and nombre.lower().endswith(".pdf"):
+            archivos.append({
+                "nombre": nombre,
+                "ruta": f"/media/{nombre}"
+            })
+
+    return render(request, "analizador/media_list.html", {
+        "archivos": archivos
+    })
+    
     
     
 def vista_pdf(request, nombre_archivo):
-    ruta_pdf = os.path.join(settings.MEDIA_ROOT, nombre_archivo)
-    existe = os.path.exists(ruta_pdf)
+    tmp_path = os.path.join(settings.MEDIA_ROOT, "tmp", nombre_archivo)
+    media_path = os.path.join(settings.MEDIA_ROOT, nombre_archivo)
+
+    if os.path.exists(tmp_path):
+        ruta_final = f"/media/tmp/{nombre_archivo}"
+        existe = True
+    elif os.path.exists(media_path):
+        ruta_final = f"/media/{nombre_archivo}"
+        existe = True
+    else:
+        ruta_final = ""
+        existe = False
 
     return render(request, "analizador/vista_pdf.html", {
         "archivo": nombre_archivo,
+        "ruta": ruta_final,
         "existe": existe
     })

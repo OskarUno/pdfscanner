@@ -42,7 +42,6 @@
                 >Subir archivos PDF</label
               >
               <div class="mb-3">
-
                 <input
                   type="file"
                   name="archivos"
@@ -79,11 +78,12 @@
                 <td>
                   {% if r.ruta %}
                   <a
-                    href="{{ r.ruta }}"
-                    target="_blank"
+                    href="{% url 'vista_pdf' nombre_archivo=r.nombre %}"
                     class="btn btn-sm btn-primary"
-                    >Abrir PDF</a
                   >
+                    📄 Previsualizar PDF
+                  </a>
+
                   {% else %} – {% endif %}
                 </td>
               </tr>
@@ -98,5 +98,7 @@
         </div>
       </div>
     </div>
+    {% include "analizador/components/footer.html" %}
+
   </body>
 </html>

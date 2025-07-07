@@ -1,0 +1,42 @@
+body {
+  background-color: #f8f9fa;
+  padding-bottom: 60px; /* espacio suficiente para el footer */
+
+}
+
+.pdf-frame {
+  width: 100%;
+  height: 90vh;
+  border: 1px solid #ced4da;
+  border-radius: 0.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-icon {
+  color: #dc3545;
+  margin-right: 0.5rem;
+}
+
+
+footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #ddd;
+}
+
+footer a.btn {
+  margin-top: 0.5rem;
+}
