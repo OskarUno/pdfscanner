@@ -2,24 +2,32 @@
 
 Aplicación web desarrollada con Django para importar, renombrar, buscar y gestionar texto dentro de archivos PDF.
 
-## ✨ Funcionalidades
+---
 
-- Subida múltiple de archivos PDF
-- Renombrado automático de PDFs con formato `{RUT}_F{Factura}.pdf`
-- Búsqueda de texto dentro de los PDFs **sin guardarlos** (modo temporal)
-- Panel dividido en dos vistas: `Importar` y `Buscar`
-- Visualización embebida de PDFs con botones reutilizables (`Volver`, `Inicio`, `Nueva pestaña`)
-- Panel adicional para listar archivos **persistentes** en la carpeta `media/`
-- Navegación consistente con footer fijo en todas las vistas
-- Interfaz optimizada con Bootstrap 5 y componentes fragmentados (`include`)
+## ✨ Funcionalidades principales
 
+- 📁 Subida múltiple de archivos PDF
+- 📝 Renombrado automático con formato `{RUT}_F{Factura}.pdf`
+- 🔍 Búsqueda de texto dentro de los PDFs **sin guardarlos** (modo temporal)
+- 📂 Lote de búsqueda persistente gracias a almacenamiento en sesión
+- 🗑️ Botón “Reiniciar lote” para limpiar PDFs temporales sin salir de la vista
+- 🧠 Mensaje contextual con recuento dinámico de archivos activos
+- 🧭 Popover interactivo con scroll para mostrar nombres de PDFs cargados
+- 🎯 Panel dividido en dos vistas principales: `Importar` y `Buscar`
+- 📄 Visualización embebida de PDFs con botones rápidos (`Volver`, `Inicio`, `Nueva pestaña`)
+- 🗂️ Panel adicional para listar archivos **persistentes** en la carpeta `media/`
+- 🎨 Interfaz optimizada con Bootstrap 5 y componentes reutilizables (`include`)
+- 🧹 Limpieza inteligente de PDFs temporales solo si se sube un nuevo lote
+
+---
 
 ## 🚀 Cómo ejecutar el proyecto
 
-1. - Clona el repositorio:
+1. Cloná el repositorio:
    ```bash
    git clone https://github.com/tu-usuario/pdfscanner.git
    cd pdfscanner
+
 
 2. - Activa el entorno virtual:
 python -m venv venv
@@ -41,14 +49,14 @@ python manage.py runserver
 | media/             | Carpeta con PDFs importados (ignorada por Git) | 
 | media/tmp/         | Carpeta temporal usada para búsqueda sin persistencia | 
 | templates/         | HTML estilizado con Bootstrap 5 | 
-| components/         | Fragmentos reutilizables (footer, botones_pdf, etc.) | 
-| vista_pdfs.css        | Estilos personalizados para visualización | 
+| components/        | Fragmentos reutilizables (footer, botones_pdf, etc.) | 
+| vista_pdfs.css     | Estilos personalizados para visualización | 
 
 
 🔐 Privacidad y exclusiones
-- Archivos PDF procesados se almacenan localmente en la carpeta media/
+- Los archivos PDF procesados se almacenan localmente en la carpeta media/
 - La carpeta media/ está excluida del control de versiones vía .gitignore
-- Se aplican buenas prácticas para no guardar PDFs temporales innecesarios (tmp/ se limpia en cada búsqueda)
+- Los archivos temporales se mantienen durante la sesión y se limpian al reiniciar el lote
 
 
 

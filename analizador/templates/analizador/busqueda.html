@@ -47,20 +47,40 @@
               <label for="id_archivos" class="form-label"
                 >Subir archivos PDF</label
               >
-              <div class="mb-3">
-                <label for="id_archivos" class="form-label"
-                  >Subir archivos PDF</label
+
+              <input
+                type="file"
+                name="archivos"
+                id="id_archivos"
+                class="form-control"
+                multiple
+                accept=".pdf"
+              />
+            </div>
+
+            <div
+              id="popover-trigger"
+              class="alert alert-info"
+              role="alert"
+              data-bs-toggle="popover"
+              data-bs-html="true"
+              data-bs-placement="bottom"
+              title="📄 Archivos en búsqueda"
+              data-bs-content="<div style='max-height:200px; overflow-y:auto;'>{{ archivos_html|safe }}</div>"
+            >
+              📂 Estás realizando búsquedas en
+              <strong>{{ request.session.archivos_actuales|length }}</strong>
+              archivos previamente subidos durante esta sesión.
+              <div class="mt-2">
+                <a
+                  href="{% url 'reiniciar_busqueda' %}"
+                  class="btn btn-outline-danger mb-3"
                 >
-                <input
-                  type="file"
-                  name="archivos"
-                  id="id_archivos"
-                  class="form-control"
-                  multiple
-                  accept=".pdf"
-                />
+                  🗑️ Reiniciar lote
+                </a>
               </div>
             </div>
+
             <div class="d-flex justify-content-between">
               <button type="submit" class="btn btn-primary">Buscar</button>
               <a href="/importar/" class="btn btn-outline-success"
@@ -70,10 +90,12 @@
           </form>
 
           {% if resultados %}
+
           <h4 class="mb-3">📁 Resultados encontrados</h4>
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark">
               <tr>
+                <th>Coincidencia</th>
                 <th>Archivo</th>
                 <th>Fragmento</th>
                 <th>Acciones</th>
@@ -82,14 +104,32 @@
             <tbody>
               {% for r in resultados %}
               <tr>
+                <td class="text-center align-middle">
+                  {% if r.coincide %}
+                  <span class="text-success fs-4">✔️</span>
+                  {% else %}
+                  <span class="text-danger fs-4">❌</span>
+                  {% endif %}
+                </td>
+
                 <td><span class="pdf-icon">📄</span>{{ r.nombre }}</td>
-                <td class="fragmento">{{ r.fragmento|safe }}</td>
-                <td>
+
+                <td class="fragmento align-middle">
+                  <div
+                    class="text-truncate text-end"
+                    style="max-width: 300px"
+                    title="{{ r.fragmento|striptags }}"
+                  >
+                    {{ r.fragmento|safe }}
+                  </div>
+                </td>
+
+                <td class="text-center align-middle">
                   <a
                     href="{% url 'vista_pdf' r.nombre %}"
                     class="btn btn-sm btn-primary"
                   >
-                    📄 Previsualizar PDF
+                    📄 Previsualizar
                   </a>
                 </td>
               </tr>
@@ -104,6 +144,14 @@
         </div>
       </div>
     </div>
-        {% include "analizador/components/footer.html" %}
+    {% include "analizador/components/footer.html" %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const popoverTrigger = document.getElementById("popover-trigger");
+      if (popoverTrigger) {
+        new bootstrap.Popover(popoverTrigger);
+      }
+    </script>
   </body>
 </html>

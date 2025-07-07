@@ -1,0 +1,93 @@
+<div id="tabla-archivos">
+  {% if archivos %}
+  <table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>
+          {% if orden_actual == "nombre_asc" %}
+          <a
+            hx-get="{% url 'filtrar_archivos_media' %}?orden=nombre_desc"
+            hx-include="#input-busqueda"
+            hx-target="#tabla-archivos"
+            hx-swap="outerHTML"
+            class="orden-activa"
+            >Archivo 🔼</a
+          >
+          {% elif orden_actual == "nombre_desc" %}
+          <a
+            hx-get="{% url 'filtrar_archivos_media' %}?orden=nombre_asc"
+            hx-include="#input-busqueda"
+            hx-target="#tabla-archivos"
+            hx-swap="outerHTML"
+            class="orden-activa"
+            >Archivo 🔽</a
+          >
+          {% else %}
+          <a
+            hx-get="{% url 'filtrar_archivos_media' %}?orden=nombre_asc"
+            hx-include="#input-busqueda"
+            hx-target="#tabla-archivos"
+            hx-swap="outerHTML"
+            >Archivo ↕️</a
+          >
+          {% endif %}
+        </th>
+
+        <th>Fragmento</th>
+        <th>
+          {% if orden_actual == "fecha_asc" %}
+          <a
+            hx-get="{% url 'filtrar_archivos_media' %}?orden=fecha_desc"
+            hx-include="#input-busqueda"
+            hx-target="#tabla-archivos"
+            hx-swap="outerHTML"
+            class="orden-activa"
+            >Fecha 🔼</a
+          >
+          {% elif orden_actual == "fecha_desc" %}
+          <a
+            hx-get="{% url 'filtrar_archivos_media' %}?orden=fecha_asc"
+            hx-include="#input-busqueda"
+            hx-target="#tabla-archivos"
+            hx-swap="outerHTML"
+            class="orden-activa"
+            >Fecha 🔽</a
+          >
+          {% else %}
+          <a
+            hx-get="{% url 'filtrar_archivos_media' %}?orden=fecha_desc"
+            hx-include="#input-busqueda"
+            hx-target="#tabla-archivos"
+            hx-swap="outerHTML"
+            >Fecha ↕️</a
+          >
+          {% endif %}
+        </th>
+
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in archivos %}
+      <tr>
+        <td><span class="pdf-icon">📄</span>{{ a.nombre }}</td>
+        <td class="fragmento">{{ a.fragmento|safe }}</td>
+        <td>{{ a.fecha }}</td>
+        <td class="text-center">
+          <a
+            href="{% url 'vista_pdf' nombre_archivo=a.nombre %}"
+            class="btn btn-sm btn-primary"
+          >
+            📄 Previsualizar
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-info text-center">
+    No se encontraron archivos que coincidan.
+  </div>
+  {% endif %}
+</div>
